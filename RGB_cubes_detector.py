@@ -15,9 +15,9 @@ time.sleep(2)  # nech interface nastartovat
 #loading model 
 model = YOLO('best.pt')  # load a custom model
 #capturing image
-cap = cv2.VideoCapture(2)#inicialize camera 
-cap.set(3,640)#img width
-cap.set(4,480)#img height
+cap = cv2.VideoCapture(0)#inicialize camera 
+cap.set(3,320)#img width
+cap.set(4,240)#img height
 
 Kp = 0.001
 v_const = 0.5   # základní rychlost vpřed (0..1)
@@ -45,8 +45,8 @@ def get_horizontal_error(center_x):
 ser.write(b'Ahoj ESP32!\n')
 print("Odesláno: Ahoj ESP32!")
 
-old_pwm_l = 0
-old_pwm_r = 0
+old_pwm_l = 128
+old_pwm_r = 128
 
 while True:
     sucess, img = cap.read()#reads frame from camera 
@@ -80,14 +80,14 @@ while True:
             if not (0.65 <= aspect_ratio <= 1.35 and min_side >= 30):
                 continue  # přeskočí nevalidní "kostku"
 
-            cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)  # správné vykreslení
+            # cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)  # správné vykreslení
             center_x, center_y = x1 + width // 2, y1 + height // 2
             center = center_x, center_y
             objects_centers.append(center)
             objects_ids.append(cube_id)
             # vykreslení středu a ID na obrázek
-            cv2.circle(img, center, 5, (0,255,0), -1)
-            cv2.putText(img, color_name, (center[0]+10, center[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
+            # cv2.circle(img, center, 5, (0,255,0), -1)
+            # cv2.putText(img, color_name, (center[0]+10, center[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,255,0), 2)
             # vzdálenost od středu obrazu
             konstanta1 = abs((img_width/2)-center_x)
             cube_distance = ((konstanta1*konstanta1 + (img_height-center_y)*(img_height-center_y)))*0.5
@@ -105,8 +105,8 @@ while True:
         x, y = objects_centers[a]
         color_name = color_names.get(objects_ids[a], str(objects_ids[a]))
         print(f"Nejbližší kostka je {color_name} na pozici ({x},{y}), vzdálenost={cube_distances[a]:.1f}")
-        cv2.circle(img, (x, y), 5, (255,255,255), thickness=-1)
-        error = get_horizontal_error(x)  # implementuj tu funkci
+        # cv2.circle(img, (x, y), 5, (255,255,255), thickness=-1)
+        error = get_horizontal_error(x)
     else:
         error = 0
 
@@ -119,11 +119,9 @@ while True:
     msg = f"{pwm_l},{pwm_r}\n"
     ser.write(msg.encode())
     
-    # zobraz obrázek s detekcemi
-    cv2.imshow("Detected Cubes", img)
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #     break
-    time.sleep(0.5)  # zpomalí smyčku na cca 2 FPS
+    # Odstraň nebo zkrať prodlevu pro vyšší FPS
+    # time.sleep(0.5)  # zpomalí smyčku na cca 2 FPS
+    #time.sleep(0.01)    # cca 8-10 FPS (dle výkonu)
 
 cap.release()
 cv2.destroyAllWindows()
