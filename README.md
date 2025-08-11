@@ -3,7 +3,8 @@
 *Detekce a sledování dřevěných kostek (R/G/B) pomocí YOLOv8, HSV trackingu a jednoduchého P‑regulátoru. Výstupem je řízení levého/pravého motoru přes UART.*
 
 > Tento README shrnuje jak projekt spustit na Raspberry Pi, jak nahrát kód přes síť (SCP/SSH), jak je zapojen UART na Arduino a jaká jsou aktuální omezení setupu. Níže je také „rychlý tahák“ s přímými příkazy.
-
+> 
+![Demo ukázka](media/VID_20250805_222528225-ezgif.com-video-to-gif-converter.gif)
 ---
 
 ## 📌 Rychlý tahák (cheat sheet)
@@ -68,7 +69,6 @@ journalctl -u cubes.service -f
 ```
 
 ---
-![Demo ukázka](media/demo.gif)
 
 
 ## 🧭 Co projekt dělá (stručně)
