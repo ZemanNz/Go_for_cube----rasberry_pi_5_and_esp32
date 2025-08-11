@@ -75,7 +75,6 @@ journalctl -u cubes.service -f
 - **Změří barvu v HSV** v okolí středu detekce a dále kostku **sleduje** přes HSV masku + morfologii + kontury.  
 - Z odchylky od středu spočítá **P‑regulátor** (`Kp`, `v_const`) a posílá **PWM páry** `L,R` po **UART** (0–255).  
 - **YOLO běží v odděleném vlákně** v intervalu `DETECT_PERIOD`, hlavní smyčka jede ~50 Hz (podle HW).  
-
 ```mermaid
 flowchart TD
     CAM[USB/CSI kamera 640x480] --> YOLO[YOLOv8 detekce]
